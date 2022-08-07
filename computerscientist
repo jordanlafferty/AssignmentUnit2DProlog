@@ -1,0 +1,107 @@
+/* guess.pl 
+ *  
+ * Computer Scientist guessing game.
+ *
+ * Author:
+ * Date:
+ *
+ * start with ?- go.     
+*/
+
+
+go :- nl,
+      write('Think of a computer scientist and I will guess who it is.'),
+      nl,
+      write('Please answer yes or no to the following questions:'),
+      nl, nl,
+      guess(ComputerScientist),
+      write('The computer scientist is  '),
+      write(ComputerScientist),
+      nl,
+      undo.
+
+/* hypotheses to be tested */
+guess(babbage)   :- babbage, !.
+guess(turing) :- turing, !.
+guess(lovelace)   :- lovelace, !.
+guess(easley)	:- easley, !.
+guess(hopper)	:- hopper, !.
+guess(minsky)	:- minsky, !.
+guess(knuth)	:- knuth, !.
+guess(allen)	:- allen, !.
+guess(brooks)	:- brooks, !.
+guess(mccarthy)	:- mccarthy, !.
+guess(unknown).             /* no diagnosis */
+
+/* CS identification rules */
+babbage :- bornbefore1930, 
+         male, 
+         fatherof,
+    	 verify(known_for_the_difference_engine).
+turing :- bornbefore1930, 
+           male,
+           fatherof.
+lovelace :- female,
+    	bornbefore1930, 
+    	 firstprogrammer.
+easley	:- female,
+    nasaemployee,
+    verify(is_a_female).
+hopper	:- female,
+    	bornbefore1930,
+       verify(is_a_female).
+allen	:- female,
+    	   optimized_comp,
+           verify(first_woman_IBM_fellow).
+minsky	:- bornbefore1930,
+    		male,
+    		university,
+           verify(first_school_was_a_university).
+knuth	:- male,
+    	   author.
+brooks	:- manmonth.
+mccarthy	:- foundingfather,
+    		   verify(known_for_lisp_programming_language).
+
+/* classification rules */
+bornbefore1930    :- verify(born_before_1930), !.
+male    :- verify(is_a_male), !.
+fatherof :- male, verify(known_as_father_of_something), !.
+university	:- male, verify(first_school_was_a_university), !.
+female    :- verify(is_a_female), !.
+optimized_comp	:-	female, verify(first_woman_IBM_fellow), !.
+firstprogrammer  :- verify(known_as_the_first_programmer), !.
+nasaemployee	:- verify(known_for_NASA_Software), !.
+author	:- verify(wrote_art_of_computer_programming), !.
+manmonth	:- verify(known_for_the_mythical_man_month), !.
+foundingfather	:- verify(known_for_lisp_programming_language), !.
+
+
+/* how to ask questions */
+ask(Question) :-
+    write('Is the computer scientist '),
+    write(Question),
+    write('? '),
+    read(Response),
+    nl,
+    ( (Response == yes ; Response == y)
+      ->
+      assert(yes(Question)) ;
+       assert(no(Question)), fail).
+
+:- dynamic yes/1,no/1.
+
+/* How to verify something */
+verify(S) :-
+   (yes(S) 
+    ->
+    true ;
+    (no(S)
+     ->
+     fail ;
+     ask(S))).
+
+/* undo all yes/no assertions */
+undo :- retract(yes(_)),fail. 
+undo :- retract(no(_)),fail.
+undo.

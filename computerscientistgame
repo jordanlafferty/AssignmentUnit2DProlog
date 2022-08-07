@@ -21,60 +21,54 @@ go :- nl,
       undo.
 
 /* hypotheses to be tested */
-guess(babbage)   :- babbage, !.
-guess(turing) :- turing, !.
-guess(lovelace)   :- lovelace, !.
-guess(easley)	:- easley, !.
-guess(hopper)	:- hopper, !.
 guess(minsky)	:- minsky, !.
-guess(knuth)	:- knuth, !.
-guess(allen)	:- allen, !.
+guess(turing) :- turing, !.
+guess(babbage)   :- babbage, !.
+guess(lovelace)   :- lovelace, !.
+guess(hopper)	:- hopper, !.
 guess(brooks)	:- brooks, !.
 guess(mccarthy)	:- mccarthy, !.
+guess(knuth)	:- knuth, !.
+guess(easley)	:- easley, !.
+guess(allen)	:- allen, !.
 guess(unknown).             /* no diagnosis */
 
 /* CS identification rules */
 babbage :- bornbefore1930, 
          male, 
-         fatherof,
     	 verify(known_for_the_difference_engine).
 turing :- bornbefore1930, 
            male,
-           fatherof.
-lovelace :- female,
+           university.
+lovelace :- 
     	bornbefore1930, 
     	 firstprogrammer.
-easley	:- female,
-    nasaemployee,
-    verify(is_a_female).
-hopper	:- female,
-    	bornbefore1930,
-       verify(is_a_female).
-allen	:- female,
-    	   optimized_comp,
-           verify(first_woman_IBM_fellow).
+easley	:- 
+    nasaemployee.
+hopper	:- 
+    	bornbefore1930.
+allen	:- university.
 minsky	:- bornbefore1930,
     		male,
     		university,
-           verify(first_school_was_a_university).
-knuth	:- male,
-    	   author.
-brooks	:- manmonth.
-mccarthy	:- foundingfather,
-    		   verify(known_for_lisp_programming_language).
+    		display,
+    		verify(first_school_was_a_university),
+    		verify(known_for_the_head_mounted_graphical_display).
+knuth	:- male.
+brooks	:- male,
+    	  university,
+           manmonth.
+mccarthy	:- male,
+               university.
 
 /* classification rules */
 bornbefore1930    :- verify(born_before_1930), !.
 male    :- verify(is_a_male), !.
-fatherof :- male, verify(known_as_father_of_something), !.
-university	:- male, verify(first_school_was_a_university), !.
-female    :- verify(is_a_female), !.
-optimized_comp	:-	female, verify(first_woman_IBM_fellow), !.
+university	:- verify(first_school_was_a_university), !.
 firstprogrammer  :- verify(known_as_the_first_programmer), !.
 nasaemployee	:- verify(known_for_NASA_Software), !.
-author	:- verify(wrote_art_of_computer_programming), !.
 manmonth	:- verify(known_for_the_mythical_man_month), !.
-foundingfather	:- verify(known_for_lisp_programming_language), !.
+display	:- verify(known_for_the_head_mounted_graphical_display), !.
 
 
 /* how to ask questions */
